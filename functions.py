@@ -1,3 +1,5 @@
+
+from main_application import login_frame, signup_frame
 def show_signup_page(signup_frame, login_frame):
     signup_frame.pack(fill="both", expand=True)
     login_frame.pack_forget()

@@ -1,7 +1,8 @@
 import tkinter as tk
 from login_gui import create_login_page
 from signup_gui import create_signup_page
-from functions import show_login_page, show_signup_page
+import importlib
+#from functions import show_login_page, show_signup_page
 
 # from home_gui import create_home_page
 
@@ -29,7 +30,9 @@ root = tk.Tk()
 root.title("Train Management System")
 
 # Create frames for login, signup, and home pages
+
 login_frame = create_login_page(root)
+
 signup_frame = create_signup_page(root)
 # home_frame = create_home_page(root)
 
@@ -38,3 +41,4 @@ show_login_page()
 
 # Run the Tkinter event loop
 root.mainloop()
+

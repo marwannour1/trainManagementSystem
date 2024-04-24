@@ -1,88 +1,50 @@
 import tkinter as tk
 from tkinter import ttk
-import pyodbc as py
 
-from database.connection import conn
+class SignUpPage:
+    def __init__(self, root, controller):
+        self.root = root
+        self.controller = controller
+        self.create_signup_page()
 
-# Establish a connection
-cursor = conn.cursor()
+    def create_signup_page(self):
+        signUp_frame = tk.Frame(self.root)
 
+        # Style the application
+        style = ttk.Style()
+        style.theme_use("clam") # Use the 'clam' theme for a modern look
+        style.configure("TLabel", font=("Arial", 12), background="white")
+        style.configure("TButton", font=("Arial", 12), background="#007BFF", foreground="white")
+        style.configure("TEntry", font=("Arial", 12), background="white")
 
-# Create the main window
-def create_signup_page(root):
+        # Create the sign-up form
+        self.username_label = ttk.Label(signUp_frame, text="First Name")
+        self.username_entry = ttk.Entry(signUp_frame)
+        self.lastname_label = ttk.Label(signUp_frame, text="Last Name")
+        self.lastname_entry = ttk.Entry(signUp_frame)
+        self.address_label = ttk.Label(signUp_frame, text="Address")
+        self.address_entry = ttk.Entry(signUp_frame)
+        self.phone_label = ttk.Label(signUp_frame, text="Phone Number")
+        self.phone_entry = ttk.Entry(signUp_frame)
+        self.password_label = ttk.Label(signUp_frame, text="Password")
+        self.password_entry = ttk.Entry(signUp_frame, show="*") # Show '*' instead of actual characters for password
 
-    signUp_frame = tk.Frame()
+        # Position the labels and entries
+        self.username_label.grid(row=0, column=0, padx=10, pady=10)
+        self.username_entry.grid(row=0, column=1, padx=10, pady=10)
+        self.lastname_label.grid(row=1, column=0, padx=10, pady=10)
+        self.lastname_entry.grid(row=1, column=1, padx=10, pady=10)
+        self.address_label.grid(row=2, column=0, padx=10, pady=10)
+        self.address_entry.grid(row=2, column=1, padx=10, pady=10)
+        self.phone_label.grid(row=3, column=0, padx=10, pady=10)
+        self.phone_entry.grid(row=3, column=1, padx=10, pady=10)
+        self.password_label.grid(row=4, column=0, padx=10, pady=10)
+        self.password_entry.grid(row=4, column=1, padx=10, pady=10)
 
-    # Style the application
-    style = ttk.Style()
-    style.theme_use("clam")  # Use the 'clam' theme for a modern look
-    style.configure("TLabel", font=("Arial", 12), background="white")
-    style.configure(
-        "TButton", font=("Arial", 12), background="#007BFF", foreground="white"
-    )
-    style.configure("TEntry", font=("Arial", 12), background="white")
+        submit_button = ttk.Button(signUp_frame, text="Submit", command=self.submit)
+        submit_button.grid(row=5, column=1, padx=10, pady=10)
 
-    # Create the sign-up form
-    username_label = ttk.Label(signUp_frame, text="First Name")
-    username_entry = ttk.Entry(signUp_frame)
-    lastname_label = ttk.Label(signUp_frame, text="Last Name")
-    lastname_entry = ttk.Entry(signUp_frame)
-    address_label = ttk.Label(signUp_frame, text="Address")
-    address_entry = ttk.Entry(signUp_frame)
-    phone_label = ttk.Label(signUp_frame, text="Phone Number")
-    phone_entry = ttk.Entry(signUp_frame)
-    password_label = ttk.Label(signUp_frame, text="Password")
-    password_entry = ttk.Entry(
-        signUp_frame, show="*"
-    )  # Show '*' instead of actual characters for password
+        signUp_frame.pack()
 
-    # Position the labels and entries
-    username_label.grid(row=0, column=0, padx=10, pady=10)
-    username_entry.grid(row=0, column=1, padx=10, pady=10)
-    lastname_label.grid(row=1, column=0, padx=10, pady=10)
-    lastname_entry.grid(row=1, column=1, padx=10, pady=10)
-    address_label.grid(row=2, column=0, padx=10, pady=10)
-    address_entry.grid(row=2, column=1, padx=10, pady=10)
-    phone_label.grid(row=3, column=0, padx=10, pady=10)
-    phone_entry.grid(row=3, column=1, padx=10, pady=10)
-    password_label.grid(row=4, column=0, padx=10, pady=10)
-    password_entry.grid(row=4, column=1, padx=10, pady=10)
-
-    submit_button = ttk.Button(
-        signUp_frame,
-        text="Submit",
-        command=lambda: submit(
-            username_entry, lastname_entry, address_entry, phone_entry, password_entry
-        ),
-    )
-    submit_button.grid(row=5, column=1, padx=10, pady=10)
-
-    return signUp_frame
-
-
-def show_login_page():
-    pass
-
-    # Add a submit button
-
-
-def submit(username_entry, lastname_entry, address_entry, phone_entry, password_entry):
-    # Get the user's input
-    fname = username_entry.get()
-    lname = lastname_entry.get()  # Get last name from lastname_entry field
-    address = address_entry.get()
-    phone_no = phone_entry.get()
-    cpassword = password_entry.get()  # Get password from password_entry field
-
-    # Call the stored procedure to add the user
-    cursor.execute(
-        "{CALL AddUser (?, ?, ?, ?, ?)}", fname, lname, address, phone_no, cpassword
-    )
-    conn.commit()
-
-    # Close the connection
-    cursor.close()
-    conn.close()
-    show_login_page()
-
-    print("User added successfully.")
+    def submit(self):
+        self.controller.submit(self.username_entry, self.lastname_entry, self.address_entry, self.phone_entry, self.password_entry)
