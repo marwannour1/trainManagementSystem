@@ -1,14 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-import sys 
-sys.path.append('C:/Users/Salma/Anaconda/Lib/site-packages') 
+
 import pyodbc as py
 import datetime
 
 
 conn = py.connect(
     "Driver={SQL Server};"
-    "Server=MSI;"
+    "Server=DESKTOP-23V77CE;"
     "Database=TrainManagementSys;"
     "Trusted_Connection=yes;"
 )
