@@ -166,7 +166,8 @@ done_button = ttk.Button(available_trips_frame, text="Filter", command=done_Atab
 done_button.grid(column=2, row=1, padx=10, pady=5, sticky="w")
 refresh_button = ttk.Button(available_trips_frame, text="Reset", command=refresh_Atable)
 refresh_button.grid(column=2, row=2, padx=10, pady=5, sticky="w")
-
+book_button = ttk.Button(available_trips_frame, text="Book", command=book_trip)
+book_button.grid(column=0, row=2, padx=10, pady=5, sticky="w")
 
 
 # Frame for previous trips
@@ -370,14 +371,9 @@ done_buttonC = ttk.Button(current_trips_frame, text="Filter", command=done_Ctabl
 done_buttonC.grid(column=2, row=1, padx=10, pady=5, sticky="w")
 refresh_buttonC = ttk.Button(current_trips_frame, text="Reset", command=refresh_Ctable)
 refresh_buttonC.grid(column=2, row=2, padx=10, pady=5, sticky="w")
+cancel_button = ttk.Button(current_trips_frame, text="Cancel", command=cancel_trip)
+cancel_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")
 
 
-
-# Buttons
-book_button = ttk.Button(root, text="Book", command=book_trip)
-book_button.grid(column=0, row=4, padx=10, pady=10, sticky="w")
-
-cancel_button = ttk.Button(root, text="Cancel", command=cancel_trip)
-cancel_button.grid(column=1, row=4, padx=10, pady=10, sticky="w")
 
 root.mainloop()
