@@ -52,7 +52,7 @@ class LoginPage:
         success = LoginController.login(email_tf, pwd_tf)
 
         if success:
-            self.show_signup_page()
+            self.show_home_page()
 
     def show_signup_page(self):
         from signup_gui import SignupPage
@@ -62,4 +62,9 @@ class LoginPage:
         self.signup_page.signup_frame.pack(fill="both", expand=True)
 
     def show_home_page(self):
-        pass
+        from home_gui import HomePage
+        from controllers.home_controller import HomeController
+
+        self.login_frame.pack_forget()
+        self.home_controller = HomeController()
+        self.home_page = HomePage(self.root, self.home_controller)

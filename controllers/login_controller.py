@@ -3,6 +3,9 @@ from database.connection import conn
 
 
 class LoginController:
+
+    loginID = None
+
     @staticmethod
     def login(email_tf, pwd_tf):
         user_id = email_tf.get()
@@ -17,6 +20,8 @@ class LoginController:
         result = cursor.fetchone()
         if result:
             print("Login successful")
+            LoginController.loginID = user_id
+
             return True
             # Add code to navigate to the next page
         else:
