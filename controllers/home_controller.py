@@ -142,7 +142,7 @@ class HomeController:
             for row in current_trips_table.get_children():
                 current_trips_table.delete(row)
 
-            self.done_Ctable(self,current_trips_table,stations,start_varC,destination_varC,date_varC)
+            self.done_Ctable(current_trips_table,stations,start_varC,destination_varC,date_varC)
     
     
     
