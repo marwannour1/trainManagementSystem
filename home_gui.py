@@ -54,11 +54,6 @@ class HomePage:
         destination_combo.grid(column=1, row=0, padx=5, pady=5, sticky="w")
         destination_combo["values"] = self.controller.get_station_combo(stations)
 
-        date_combo = ttk.Combobox(
-            available_trips_frame, textvariable=date_var, state="readonly"
-        )
-        date_combo.grid(column=2, row=0, padx=5, pady=5, sticky="w")
-        date_combo["values"] = self.controller.get_dates()
 
         available_trips_table = ttk.Treeview(
             available_trips_frame,
