@@ -1,3 +1,5 @@
+import sys
+sys.path.append("C:/Users/Salma/Anaconda/Lib/site-packages")
 import pyodbc as py
 from database.connection import conn
 

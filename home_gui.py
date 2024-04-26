@@ -57,7 +57,7 @@ class HomePage:
 
         available_trips_table = ttk.Treeview(
             available_trips_frame,
-            columns=("Start", "Destination", "Arrival Time","Departure Time"),
+            columns=("Start", "Destination","Departure Time","Arrival Time"),
             show="headings",
         )
         available_trips_table.column("Start", width=100)
@@ -332,3 +332,12 @@ class HomePage:
         )
     def get_routeID(self,selected_item,available_trips_table, stations):
         self.controller.get_routeID(selected_item,available_trips_table, stations)
+
+    def show_booking_page(self):
+        from booking_gui import BookingPage
+
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        self.booking_page = BookingPage(self.root)
+        self.booking_page.booking_page.pack(fill="both", expand=True)
