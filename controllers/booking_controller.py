@@ -9,14 +9,18 @@ from controllers.login_controller import LoginController
 class BookingController:
     @staticmethod
     def get_available_seats():
-        cursor = conn.cursor()
-        # Correctly call the function in a SELECT statement and pass parameters
-        cursor.execute("SELECT dbo.get_free_seats(?, ?) ")
-        args= (HomeController.route_ID, "2024-6-6")
-        row = cursor.fetchone()
-        if row:
-            return row[0] # Assuming the function returns a single value
-        else:
+       select= "SELECT dbo.get_free_seats(?, ?) AS free_seats"  # SQL query to call the user-defined function
+       args = ('2024-05-01', HomeController.route_id)  # Parameters for the function call
+       cursor = conn.cursor()
+        # Execute the SQL query with parameters
+       cursor.execute(select, args)
+
+        # Fetch the result of the query
+       result = cursor.fetchone()
+
+       if result:
+            return result[0] # Assuming the function returns a single value
+       else:
             return None # Or handle the case where no result is returned
     @staticmethod
     def book_now(date_entry, ticket_entry, available_seats):
@@ -25,10 +29,11 @@ class BookingController:
         if ticket_count_str.isdigit() and int(ticket_count_str) > 0:
             ticket_count = int(ticket_count_str)
             if selected_date and ticket_count <= available_seats:
-                 cursor = conn.cursor()
-                 # Use a more standard syntax for calling stored procedures
-                 cursor.execute("{CALL InsertTicket (?, ?, ?)}", (selected_date, LoginController.loginID, HomeController.route_id))
-                 conn.commit()
+                cursor = conn.cursor()
+                select = "{CALL InsertTicket (?, ?, ?)}"
+                args = (selected_date, LoginController.loginID, HomeController.route_id)
+                cursor.execute(select, args)
+                conn.commit()
             
             else:
                 messagebox.showerror(

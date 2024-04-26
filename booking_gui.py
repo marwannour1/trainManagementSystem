@@ -20,7 +20,7 @@ class CustomDateEntry(DateEntry):
 class BookingPage:
     def __init__(self, root):
         self.root = root
-        self.available_seats = BookingController.get_available_seats  # Example variable for available seats
+        self.available_seats = BookingController.get_available_seats() # Example variable for available seats
         self.selected_date = None  # Variable to store the selected date
         self.ticket_count = 0  # Variable to store the number of tickets
         self.booking_page = self.setup_gui()
