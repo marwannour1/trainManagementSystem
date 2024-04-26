@@ -1,6 +1,6 @@
 import sys
 
-# sys.path.append("C:/Users/Salma/Anaconda/Lib/site-packages")
+
 import pyodbc as py
 import datetime
 import sys
@@ -9,6 +9,8 @@ from controllers.login_controller import LoginController
 
 
 class HomeController:
+
+    route_id = None
 
     def __init__(self):
         self.cursor = conn.cursor()
@@ -28,22 +30,16 @@ class HomeController:
         dates = [row[0] for row in self.cursor.fetchall()]
         return dates
 
-    def done_Atable(
-        self, available_trips_table, stations, start_var, destination_var, date_var
-    ):
+    def done_Atable(self, available_trips_table, stations, start_var, destination_var):
         #  if date_var.get() != "Date" or stations.get(start_var.get(), 0) !=0 or stations.get(destination_var.get(), 0) !=0 :
         for row in available_trips_table.get_children():
             available_trips_table.delete(row)
         try:
             start_id = stations.get(start_var.get(), 0)
             destination_id = stations.get(destination_var.get(), 0)
-            date_id = date_var.get()
 
-            if date_id == "Date":
-                date_id = None
-
-            select = "SELECT * FROM returnATable(?, ?, ?)"
-            args = (start_id, destination_id, date_id)
+            select = "SELECT * FROM returnATable(?, ?)"
+            args = (start_id, destination_id)
 
             self.cursor.execute(select, args)
             results = self.cursor.fetchall()
@@ -51,26 +47,31 @@ class HomeController:
             for row in results:
                 start_station = row[0]
                 destination_station = row[1]
-                trip_date = row[2]
+                Departure_Time = row[2]
+                Arrival_Time = row[3]
 
                 available_trips_table.insert(
-                    "", "end", values=(start_station, destination_station, trip_date)
+                    "",
+                    "end",
+                    values=(
+                        start_station,
+                        destination_station,
+                        Departure_Time,
+                        Arrival_Time,
+                    ),
                 )
         except Exception as e:
             print(f"Error fetching data: {e}")
 
     def refresh_Atable(
-        self, available_trips_table, stations, start_var, destination_var, date_var
+        self, available_trips_table, stations, start_var, destination_var
     ):
         start_var.set("Start")
         destination_var.set("Destination")
-        date_var.set("Date")
 
         for row in available_trips_table.get_children():
             available_trips_table.delete(row)
-        self.done_Atable(
-            available_trips_table, stations, start_var, destination_var, date_var
-        )
+        self.done_Atable(available_trips_table, stations, start_var, destination_var)
 
     def done_Ptable(
         self, previous_trips_table, stations, start_varP, destination_varP, date_varP
@@ -85,8 +86,8 @@ class HomeController:
             if date_id == "Date":
                 date_id = None
 
-            select = "SELECT * FROM returnPTable(?, ?, ?)"
-            args = (start_idP, destination_idP, date_id)
+            select = "SELECT * FROM returnPTable(?, ?, ?,?)"
+            args = (LoginController.loginID, start_idP, destination_idP, date_id)
 
             self.cursor.execute(select, args)
             results = self.cursor.fetchall()
@@ -161,3 +162,47 @@ class HomeController:
         self.done_Ctable(
             current_trips_table, stations, start_varC, destination_varC, date_varC
         )
+
+    def get_routeID(self, selected_item, available_trips_table, stations):
+
+        # Retrieve values from the selected row
+        # values = available_trips_table.item(selected_item)['values']
+        if selected_item:
+            try:
+
+                start_station = selected_item[0]
+                destination_station = selected_item[1]
+
+                start_id = stations.get(start_station, 0)
+                destination_id = stations.get(destination_station, 0)
+                departure_time = selected_item[2]
+                arrival_time = selected_item[3]
+
+                select = "SELECT dbo.returnRouteID(?, ?)"
+                args = (start_id, destination_id)
+
+                self.cursor.execute(select, args)
+                route_id = self.cursor.fetchone()[0]
+                print("route", route_id)
+
+                # Do something with the values (e.g., display them or use them for further processing)
+                print("Selected Trip:")
+                print("ids", start_id, destination_id)
+                print("Start Station:", start_station)
+                print("Destination Station:", destination_station)
+                print("Arrival Time:", arrival_time)
+                print("Departure Time:", departure_time)
+                HomeController.route_id = route_id
+                return True
+            except Exception as e:
+                print(f"Error fetching data: {e}")
+                return False
+
+        else:
+            print("No values found for the selected row.")
+            return False
+
+    # # To get the selected internal value (station ID) when needed
+    # def get_internal_value(combo, named_values):
+    #     selected_named_value = combo.get()
+    #     return named_values[selected_named_value]

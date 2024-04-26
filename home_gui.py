@@ -2,15 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 
 
-def book_trip():
-    pass
-
-
-def cancel_trip():
-    pass
-
-
-from controllers.home_controller import HomeController
 from controllers.login_controller import LoginController
 
 
@@ -18,7 +9,8 @@ class HomePage:
     def __init__(self, root, controller):
         self.root = root
         self.controller = controller
-        self.homepage = self.create_main_page()
+        self.selected_items = []
+        self.create_main_page()
 
     def create_main_page(self):
 
@@ -53,49 +45,107 @@ class HomePage:
         destination_combo.grid(column=1, row=0, padx=5, pady=5, sticky="w")
         destination_combo["values"] = self.controller.get_station_combo(stations)
 
-        date_combo = ttk.Combobox(
-            available_trips_frame, textvariable=date_var, state="readonly"
-        )
-        date_combo.grid(column=2, row=0, padx=5, pady=5, sticky="w")
-        date_combo["values"] = self.controller.get_dates()
-
         available_trips_table = ttk.Treeview(
             available_trips_frame,
-            columns=("Start", "Destination", "Date"),
+            columns=("Start", "Destination", "Arrival Time", "Departure Time"),
             show="headings",
         )
         available_trips_table.column("Start", width=100)
         available_trips_table.column("Destination", width=100)
-        available_trips_table.column("Date", width=100)
+        available_trips_table.column("Departure Time", width=100)
+        available_trips_table.column("Arrival Time", width=100)
         available_trips_table.heading("Start", text="Start")
         available_trips_table.heading("Destination", text="Destination")
-        available_trips_table.heading("Date", text="Date")
+        available_trips_table.heading("Departure Time", text="Departure_Time")
+        available_trips_table.heading("Arrival Time", text="Arrival_Time")
+
         available_trips_table.grid(
             column=0, row=1, columnspan=3, padx=5, pady=5, sticky="w"
         )
 
         self.controller.done_Atable(
-            available_trips_table, stations, start_var, destination_var, date_var
+            available_trips_table, stations, start_var, destination_var
         )
 
         done_button = ttk.Button(
             available_trips_frame,
             text="Filter",
             command=lambda: self.done_Atable(
-                available_trips_table, stations, start_var, destination_var, date_var
+                available_trips_table, stations, start_var, destination_var
             ),
         )
-        done_button.grid(column=2, row=1, padx=10, pady=5, sticky="w")
+        done_button.grid(column=1, row=2, padx=10, pady=5, sticky="w")
+
         refresh_button = ttk.Button(
             available_trips_frame,
             text="Reset",
             command=lambda: self.refresh_Abutton(
-                available_trips_table, stations, start_var, destination_var, date_var
+                available_trips_table, stations, start_var, destination_var
             ),
         )
         refresh_button.grid(column=2, row=2, padx=10, pady=5, sticky="w")
+        refresh_button = ttk.Button(
+            available_trips_frame,
+            text="Reset",
+            command=lambda: self.refresh_Atable(
+                previous_trips_table, stations, start_varP, destination_varP
+            ),
+        )
+
+        # selected_item = None
+        def handle_row_selection(event):
+            selected_item = available_trips_table.selection()
+            if selected_item:
+
+                print("Selected item:", selected_item)
+                self.selected_items = available_trips_table.item(
+                    selected_item, "values"
+                )
+                # selected_values(item_values)
+                return selected_item
+            else:
+                print("No item selected")
+                return None
+
+        # # def selected_values(item):
+        # #         selected_item= item
+        # #         return selected_item
+
+        available_trips_table.bind("<<TreeviewSelect>>", handle_row_selection)
+
+        # def routeID():
+        #     global selected_item  # Access the selected item from the global variable
+        #     if selected_item:
+        #         route_id = selected_item  # Assuming the route ID is stored in the first column
+        #         return route_id
+        #     else:
+        #         print("No item selected")
+        #         return None
+
+        # item=routeID()
+
+        # selected_item=selected_values
+        # if selected_item:
+        #         start = selected_item[0]  # Assuming start is the first column
+        #         destination = selected_item[1]  # Assuming destination is the second column
+        #         arrival_time = selected_item[2]  # Assuming arrival time is the third column
+        #         departure_time = selected_item[3]
+        #         print(start, destination, arrival_time, departure_time)
+        # else:
+        #         # Handle case when no item is selected
+        #         print("No item selected")
+
+        # def on_row_select(self, event):
+        #     selected_item = self.available_trips_table.focus()
+        #     item_details = self.available_trips_table.item(selected_item)
+        #     self.selected_items = item_details['values']
+
         book_button = ttk.Button(
-            available_trips_frame, text="Book", command=lambda: self.show_booking_page()
+            available_trips_frame,
+            text="Book",
+            command=lambda: self.show_booking_page(
+                self.selected_items, available_trips_table, stations
+            ),
         )
         book_button.grid(column=0, row=2, padx=10, pady=5, sticky="w")
 
@@ -155,7 +205,7 @@ class HomePage:
                 previous_trips_table, stations, start_varP, destination_varP, date_varP
             ),
         )
-        done_buttonP.grid(column=2, row=1, padx=10, pady=5, sticky="w")
+        done_buttonP.grid(column=1, row=2, padx=10, pady=5, sticky="w")
         refresh_buttonP = ttk.Button(
             previous_trips_frame,
             text="Reset",
@@ -220,7 +270,7 @@ class HomePage:
                 current_trips_table, stations, start_varC, destination_varC, date_varC
             ),
         )
-        done_buttonC.grid(column=2, row=1, padx=10, pady=5, sticky="w")
+        done_buttonC.grid(column=1, row=2, padx=10, pady=5, sticky="w")
         refresh_buttonC = ttk.Button(
             current_trips_frame,
             text="Reset",
@@ -234,8 +284,6 @@ class HomePage:
         )
         cancel_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")
 
-        return available_trips_frame, previous_trips_frame, current_trips_frame
-
     def refresh_Pbutton(
         self, previous_trips_table, stations, start_varP, destination_varP, date_varP
     ):
@@ -244,10 +292,10 @@ class HomePage:
         )
 
     def refresh_Abutton(
-        self, available_trips_table, stations, start_var, destination_var, date_var
+        self, available_trips_table, stations, start_var, destination_var
     ):
         self.controller.refresh_Atable(
-            available_trips_table, stations, start_var, destination_var, date_var
+            available_trips_table, stations, start_var, destination_var
         )
 
     def refresh_Cbutton(
@@ -257,11 +305,9 @@ class HomePage:
             current_trips_table, stations, start_varC, destination_varC, date_varC
         )
 
-    def done_Atable(
-        self, available_trips_table, stations, start_var, destination_var, date_var
-    ):
+    def done_Atable(self, available_trips_table, stations, start_var, destination_var):
         self.controller.done_Atable(
-            available_trips_table, stations, start_var, destination_var, date_var
+            available_trips_table, stations, start_var, destination_var
         )
 
     def done_Ptable(
@@ -278,11 +324,18 @@ class HomePage:
             current_trips_table, stations, start_varC, destination_varC, date_varC
         )
 
-    def show_booking_page(self):
-        from booking_gui import BookingPage
+    def get_routeID(self, selected_item, available_trips_table, stations):
+        return self.controller.get_routeID(
+            selected_item, available_trips_table, stations
+        )
 
-        for widget in self.root.winfo_children():
-            widget.destroy()
+    def show_booking_page(self, selected_item, available_trips_table, stations):
 
-        self.booking_page = BookingPage(self.root)
-        self.booking_page.booking_page.pack(fill="both", expand=True)
+        if self.get_routeID(selected_item, available_trips_table, stations):
+            from booking_gui import BookingPage
+
+            for widget in self.root.winfo_children():
+                widget.destroy()
+
+            self.booking_page = BookingPage(self.root)
+            self.booking_page.booking_page.pack(fill="both", expand=True)
