@@ -285,4 +285,4 @@ class HomePage:
             widget.destroy()
 
         self.booking_page = BookingPage(self.root)
-        self.booking_page.booking_frame.pack(fill="both", expand=True)
+        self.booking_page.booking_page.pack(fill="both", expand=True)

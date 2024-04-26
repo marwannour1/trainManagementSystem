@@ -1,28 +1,34 @@
-import pyodbc
+import pyodbc as py
 from database.connection import conn
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
 
 
 class BookingController:
 
     @staticmethod
-    def load_available_seats_and_trip_info(train_id):
-        query = """
-        SELECT S.Seat_ID, S.price, R.Departure_Time, R.Arrival_Time, R.Station_From, R.Station_To, COUNT(S.Seat_ID) OVER() as TotalSeats
-        FROM Seat S
-        INNER JOIN Train_Route TR ON S.Train_ID = TR.Train_ID
-        INNER JOIN Route R ON TR.Route_ID = R.Route_ID
-        WHERE S.Train_ID = ?;
-        """
-        cursor = conn.cursor()
-        cursor.execute(query, (train_id,))
-        seats = cursor.fetchall()
-        return [
-            (seat[0], seat[1], seat[2], seat[3], seat[4], seat[5], seat[6])
-            for seat in seats
-        ]
-
-    @staticmethod
-    def book_seat(seat_id):
-        # Implement the logic to book a seat here
-        print(f"Seat {seat_id} booked.")
-        return True
+    def book_now(date_entry, ticket_entry, available_seats):
+        selected_date = date_entry.get_date()
+        ticket_count_str = ticket_entry.get()
+        if ticket_count_str.isdigit() and int(ticket_count_str) > 0:
+            ticket_count = int(ticket_count_str)
+            if selected_date and ticket_count <= available_seats:
+                # Simulate booking logic
+                booking_successful = (
+                    True  # Change this based on your actual booking logic
+                )
+                if booking_successful:
+                    messagebox.showinfo("Success", "Booking successful!")
+                else:
+                    messagebox.showerror("Error", "Booking failed. Please try again.")
+            else:
+                messagebox.showerror(
+                    "Error",
+                    "Please select a date or the number of tickets exceeds available seats.",
+                )
+        else:
+            messagebox.showerror(
+                "Error", "Please enter a valid number of tickets greater than 0."
+            )
+        return False

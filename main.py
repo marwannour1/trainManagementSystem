@@ -1,186 +1,99 @@
 import tkinter as tk
-from tkinter import messagebox
-
-
-def show_login_page():
-    login_frame.pack(fill="both", expand=True)
-    signup_frame.pack_forget()
-    home_frame.pack_forget()
-
-
-def show_signup_page():
-    signup_frame.pack(fill="both", expand=True)
-    login_frame.pack_forget()
-    home_frame.pack_forget()
-
-
-def show_home_page():
-    home_frame.pack(fill="both", expand=True)
-    login_frame.pack_forget()
-    signup_frame.pack_forget()
-
-
-def login_attempt():
-    username = username_entry.get()
-    password = password_entry.get()
-    # Placeholder for actual authentication logic
-    messagebox.showinfo("Login", "Login successful!")
-    show_home_page()
-
-
-def signup_attempt():
-    # Placeholder for signup logic
-    messagebox.showinfo("Signup", "Signup successful!")
-    show_login_page()
-
-
-# Create the main window
-root = tk.Tk()
-root.title("Train Management System")
-
-# Create frames for login, signup, and home pages
-login_frame = tk.Frame(root)
-signup_frame = tk.Frame(root)
-home_frame = tk.Frame(root)
-
-# Login page widgets
-username_label = tk.Label(login_frame, text="Username")
-username_label.pack()
-username_entry = tk.Entry(login_frame)
-username_entry.pack()
-
-password_label = tk.Label(login_frame, text="Password")
-password_label.pack()
-password_entry = tk.Entry(login_frame, show="*")
-password_entry.pack()
-
-login_button = tk.Button(login_frame, text="Login", command=login_attempt)
-login_button.pack()
-
-signup_button = tk.Button(login_frame, text="Signup", command=show_signup_page)
-signup_button.pack()
-
-# Signup page widgets
-signup_label = tk.Label(signup_frame, text="Signup")
-signup_label.pack()
-
-name_label = tk.Label(signup_frame, text="Full Name")
-name_label.pack()
-name_entry = tk.Entry(signup_frame)
-name_entry.pack()
-
-email_label = tk.Label(signup_frame, text="Email")
-email_label.pack()
-email_entry = tk.Entry(signup_frame)
-email_entry.pack()
-
-password_label = tk.Label(signup_frame, text="Password")
-password_label.pack()
-password_entry = tk.Entry(signup_frame, show="*")
-password_entry.pack()
-
-signup_submit_button = tk.Button(signup_frame, text="Submit", command=signup_attempt)
-signup_submit_button.pack()
-
-# Home page widgets
-home_label = tk.Label(home_frame, text="Welcome to the Home Page!")
-home_label.pack()
-
-# Initially, show the login page
-show_login_page()
-
-# Run the Tkinter event loop
-root.mainloop()
+from tkcalendar import DateEntry
+import datetime
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 
 
-def show_login_page():
-    login_frame.pack(fill="both", expand=True)
-    signup_frame.pack_forget()
-    home_frame.pack_forget()
+class CustomDateEntry(DateEntry):
+    def __init__(self, master=None, **kw):
+        DateEntry.__init__(self, master, **kw)
+        self.set_date(datetime.date.today())
+        self.bind("<FocusIn>", self.check_date)
+
+    def check_date(self, event):
+        if self.get_date() < datetime.date.today():
+            self.set_date(datetime.date.today())
 
 
-def show_signup_page():
-    signup_frame.pack(fill="both", expand=True)
-    login_frame.pack_forget()
-    home_frame.pack_forget()
+class BookingPage:
+    def __init__(self, root):
+        self.root = root
+        self.available_seats = 10  # Example variable for available seats
+        self.selected_date = None  # Variable to store the selected date
+        self.ticket_count = 0  # Variable to store the number of tickets
+        self.setup_gui()
+
+    def setup_gui(self):
+        # Create a frame to hold the widgets
+        frame = tk.Frame(self.root)
+        frame.pack(padx=20, pady=20)
+
+        # Label to display the number of available seats
+        available_seats_label = tk.Label(
+            frame,
+            text=f"Number of available seats = {self.available_seats}",
+            font=("Arial", 12),
+        )
+        available_seats_label.pack(pady=10)
+
+        # Label for train route and ID
+        route_label = tk.Label(
+            frame,
+            text="From {x} station to station {y} on train id {z}".format(
+                x="Station A", y="Station B", z="123"
+            ),
+            font=("Arial", 12),
+        )
+        route_label.pack(pady=10)
+
+        # Entry for ticket count
+        self.ticket_entry = tk.Entry(frame, font=("Arial", 12))
+        self.ticket_entry.pack(pady=10)
+        self.ticket_entry.insert(0, "1")  # Default value
+
+        # CustomDateEntry widget for date selection
+        self.date_entry = CustomDateEntry(frame, width=12, font=("Arial", 12))
+        self.date_entry.pack(pady=10)
+
+        # Button to book
+        book_button = tk.Button(
+            frame, text="Book Now", command=self.book_now, font=("Arial", 12)
+        )
+        book_button.pack(pady=10)
+
+    def book_now(self):
+        self.selected_date = self.date_entry.get_date()
+        ticket_count_str = self.ticket_entry.get()
+        if ticket_count_str.isdigit() and int(ticket_count_str) > 0:
+            self.ticket_count = int(ticket_count_str)
+            if self.selected_date and self.ticket_count <= self.available_seats:
+                # Simulate booking logic
+                booking_successful = (
+                    True  # Change this based on your actual booking logic
+                )
+                if booking_successful:
+                    messagebox.showinfo("Success", "Booking successful!")
+                else:
+                    messagebox.showerror("Error", "Booking failed. Please try again.")
+            else:
+                messagebox.showerror(
+                    "Error",
+                    "Please select a date or the number of tickets exceeds available seats.",
+                )
+        else:
+            messagebox.showerror(
+                "Error", "Please enter a valid number of tickets greater than 0."
+            )
 
 
-def show_home_page():
-    home_frame.pack(fill="both", expand=True)
-    login_frame.pack_forget()
-    signup_frame.pack_forget()
+def main():
+    root = tk.Tk()
+    root.title("Booking Page")
+    BookingPage(root)
+    root.mainloop()
 
 
-def login_attempt():
-    username = username_entry.get()
-    password = password_entry.get()
-    # Placeholder for actual authentication logic
-    messagebox.showinfo("Login", "Login successful!")
-    show_home_page()
-
-
-def signup_attempt():
-    # Placeholder for signup logic
-    messagebox.showinfo("Signup", "Signup successful!")
-    show_login_page()
-
-
-# Create the main window
-root = tk.Tk()
-root.title("Train Management System")
-
-# Create frames for login, signup, and home pages
-login_frame = tk.Frame(root)
-signup_frame = tk.Frame(root)
-home_frame = tk.Frame(root)
-
-# Login page widgets
-username_label = tk.Label(login_frame, text="Username")
-username_label.pack()
-username_entry = tk.Entry(login_frame)
-username_entry.pack()
-
-password_label = tk.Label(login_frame, text="Password")
-password_label.pack()
-password_entry = tk.Entry(login_frame, show="*")
-password_entry.pack()
-
-login_button = tk.Button(login_frame, text="Login", command=login_attempt)
-login_button.pack()
-
-signup_button = tk.Button(login_frame, text="Signup", command=show_signup_page)
-signup_button.pack()
-
-# Signup page widgets
-signup_label = tk.Label(signup_frame, text="Signup")
-signup_label.pack()
-
-name_label = tk.Label(signup_frame, text="Full Name")
-name_label.pack()
-name_entry = tk.Entry(signup_frame)
-name_entry.pack()
-
-email_label = tk.Label(signup_frame, text="Email")
-email_label.pack()
-email_entry = tk.Entry(signup_frame)
-email_entry.pack()
-
-password_label = tk.Label(signup_frame, text="Password")
-password_label.pack()
-password_entry = tk.Entry(signup_frame, show="*")
-password_entry.pack()
-
-signup_submit_button = tk.Button(signup_frame, text="Submit", command=signup_attempt)
-signup_submit_button.pack()
-
-# Home page widgets
-home_label = tk.Label(home_frame, text="Welcome to the Home Page!")
-home_label.pack()
-
-# Initially, show the login page
-show_login_page()
-
-# Run the Tkinter event loop
-root.mainloop()
+if __name__ == "__main__":
+    main()
