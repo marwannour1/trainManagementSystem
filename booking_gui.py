@@ -1,25 +1,29 @@
 import tkinter as tk
 from tkinter import ttk
-from database import load_available_seats_and_trip_info
+from controllers.booking_controller import BookingController
 
 
-class TrainBookingGUI:
+class BookingPage:
     def __init__(self, root):
         self.root = root
         self.train_id = 6  # Example train ID
-        self.available_seats_and_info = load_available_seats_and_trip_info(
+        self.booking_frame = self.create_booking_frame(root)
+
+    def create_booking_frame(self, root):
+        # Create a frame to contain all the booking elements
+        booking_frame = ttk.Frame(root)
+
+        # Load available seats and trip information for the selected train
+        available_seats_and_info = BookingController.load_available_seats_and_trip_info(
             self.train_id
         )
-        self.gui_frame = self.setup_gui()
-        self.gui_frame.pack(padx=10, pady=10)
 
-    def setup_gui(self):
-        gui_frame = tk.Frame(self.root)
-
-        selected_trip_info_label = tk.Label(gui_frame, text="")
+        # Create a label to display the selected trip information
+        selected_trip_info_label = tk.Label(booking_frame, text="")
         selected_trip_info_label.grid(row=0, column=0, padx=10, pady=10)
 
-        if self.available_seats_and_info:
+        # Update the label with the selected trip information
+        if available_seats_and_info:
             (
                 seat_id,
                 price,
@@ -28,35 +32,39 @@ class TrainBookingGUI:
                 station_from,
                 station_to,
                 total_seats,
-            ) = self.available_seats_and_info[0]
+            ) = available_seats_and_info[0]
             selected_trip_info_label.config(
                 text=f"Departure: {departure_time}, Arrival: {arrival_time}, From: {station_from}, To: {station_to}, Seats Available: {total_seats}"
             )
 
-        seat_var = tk.StringVar(gui_frame)
-        seat_var.set(self.available_seats_and_info[0][0])  # Default value
+        # Create a dropdown menu for selecting a seat
+        seat_var = tk.StringVar(booking_frame)
+        seat_var.set(available_seats_and_info[0][0])  # Default value
         seat_menu = ttk.Combobox(
-            gui_frame,
+            booking_frame,
             textvariable=seat_var,
             values=[
-                f"{seat[0]} - Price: {seat[1]}"
-                for seat in self.available_seats_and_info
+                f"{seat[0]} - Price: {seat[1]}" for seat in available_seats_and_info
             ],
         )
         seat_menu.grid(row=1, column=0, padx=10, pady=10)
 
-        book_button = ttk.Button(gui_frame, text="Book Seat", command=on_book_click)
+        # Book button
+
+        book_button = ttk.Button(
+            booking_frame,
+            text="Book Seat",
+            command=lambda: self.on_book_click(seat_var),
+        )
         book_button.grid(row=2, column=0, padx=10, pady=10)
 
-        return gui_frame
+        return booking_frame
 
-
-def main():
-    root = tk.Tk()
-    root.title("Train Booking System")
-    TrainBookingGUI(root)
-    root.mainloop()
-
-
-if __name__ == "__main__":
-    main()
+    def on_book_click(self, seat_var):
+        seat_id = seat_var.get().split(" - ")[
+            0
+        ]  # Extract seat ID from the selected option
+        success = BookingController.book_seat(seat_id)
+        if success:
+            print(f"Seat {seat_id} booked successfully.")
+            # Here, you would proceed with the booking process

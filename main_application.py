@@ -1,6 +1,7 @@
 import tkinter as tk
 from login_gui import LoginPage
 from signup_gui import SignupPage
+from booking_gui import BookingPage
 
 
 def main():

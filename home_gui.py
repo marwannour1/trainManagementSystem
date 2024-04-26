@@ -18,7 +18,7 @@ class HomePage:
     def __init__(self, root, controller):
         self.root = root
         self.controller = controller
-        self.create_main_page()
+        self.homepage = self.create_main_page()
 
     def create_main_page(self):
 
@@ -94,7 +94,9 @@ class HomePage:
             ),
         )
         refresh_button.grid(column=2, row=2, padx=10, pady=5, sticky="w")
-        book_button = ttk.Button(available_trips_frame, text="Book", command=book_trip)
+        book_button = ttk.Button(
+            available_trips_frame, text="Book", command=lambda: self.show_booking_page()
+        )
         book_button.grid(column=0, row=2, padx=10, pady=5, sticky="w")
 
         # Frame for previous trips
@@ -232,6 +234,8 @@ class HomePage:
         )
         cancel_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")
 
+        return available_trips_frame, previous_trips_frame, current_trips_frame
+
     def refresh_Pbutton(
         self, previous_trips_table, stations, start_varP, destination_varP, date_varP
     ):
@@ -273,3 +277,12 @@ class HomePage:
         self.controller.done_Ctable(
             current_trips_table, stations, start_varC, destination_varC, date_varC
         )
+
+    def show_booking_page(self):
+        from booking_gui import BookingPage
+
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        self.booking_page = BookingPage(self.root)
+        self.booking_page.booking_frame.pack(fill="both", expand=True)

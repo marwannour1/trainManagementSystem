@@ -161,10 +161,3 @@ class HomeController:
         self.done_Ctable(
             current_trips_table, stations, start_varC, destination_varC, date_varC
         )
-
-
-
-    # # To get the selected internal value (station ID) when needed
-    # def get_internal_value(combo, named_values):
-    #     selected_named_value = combo.get()
-    #     return named_values[selected_named_value]
