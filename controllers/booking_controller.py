@@ -25,13 +25,16 @@ class BookingController:
     @staticmethod
     def book_now(date_entry, ticket_entry, available_seats):
         selected_date = date_entry.get_date()
+        selected_date_str = selected_date.strftime('%Y-%m-%d')
+        print(type(selected_date_str))
         ticket_count_str = ticket_entry.get()
         if ticket_count_str.isdigit() and int(ticket_count_str) > 0:
             ticket_count = int(ticket_count_str)
             if selected_date and ticket_count <= available_seats:
+                print(selected_date, ticket_count)
                 cursor = conn.cursor()
                 select = "{CALL InsertTicket (?, ?, ?)}"
-                args = (selected_date, LoginController.loginID, HomeController.route_id)
+                args = (selected_date_str, LoginController.loginID, HomeController.route_id)
                 cursor.execute(select, args)
                 conn.commit()
             
