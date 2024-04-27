@@ -118,7 +118,7 @@ class HomePage:
             available_trips_frame,
             text="Book",
             command=lambda: self.show_booking_page(
-                self.selected_items, available_trips_table, stations
+                self.selected_itemsA, available_trips_table, stations
             ),
         )
         book_button.grid(column=0, row=2, padx=10, pady=5, sticky="w")
@@ -262,7 +262,7 @@ class HomePage:
                 self.selected_itemsC = current_trips_table.item(
                     selected_item, "values"
                 )
-                # selected_values(item_values)
+                print(self.selected_itemsC[0],self.selected_itemsC[1],self.selected_itemsC[2])
                 return selected_item
             else:
                 print("No item selected")
@@ -275,7 +275,7 @@ class HomePage:
 
 
         cancel_button = ttk.Button(
-            current_trips_frame, text="Cancel", command=self.cancel_trip(self.selected_itemsC, stations,LoginController.loginID)
+            current_trips_frame, text="Cancel", command=lambda:self.cancel_trip(self.selected_itemsC, stations,LoginController.loginID)
         )
 
         cancel_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")

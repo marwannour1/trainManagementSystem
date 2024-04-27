@@ -219,26 +219,31 @@ class HomeController:
 
                 start_id = stations.get(start_station, 0)
                 destination_id = stations.get(destination_station, 0)
-                
+
                 date = selected_item[2]
 
-                select = "SELECT dbo.cancelTicket(?, ?)"
+                select =  "{call cancelTicket (?, ?, ?, ?)}"
                 args = (start_id, destination_id,date,user_id)
 
                 self.cursor.execute(select, args)
-                route_id = self.cursor.fetchone()[0]
-                print("route", route_id)
-
-                # Do something with the values (e.g., display them or use them for further processing)
+                success = args[-1]
+                
                 print("Selected Trip:")
                 print("ids", start_id, destination_id)
                 print("Start Station:", start_station)
-                HomeController.station_from=start_station
                 print("Destination Station:", destination_station)
-                HomeController.station_to=destination_station
                 print("date:", date)
-                HomeController.route_id = route_id
-                return True
+                print(type(date) )
+
+                # Check the success flag
+                if success:
+                    print("Ticket cancellation successful.")
+                    return True
+                else:
+                    print("Ticket cancellation failed.")
+                    return False
+
+                
             except Exception as e:
                 print(f"Error fetching data: {e}")
                 return False
