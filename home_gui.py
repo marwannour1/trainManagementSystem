@@ -14,12 +14,17 @@ class HomePage:
         self.create_main_page()
 
     def create_main_page(self):
-
+        user_name=self.get_user_name((LoginController.loginID))
         header_label = ttk.Label(
             self.root,
-            text=f"Welcome, {LoginController.loginID}!",
-            font=("Arial", 16, "bold"),
+            text=f"Welcome, {user_name}!",
+            font=("Arial", 20, "bold"),
+            foreground="#000000",  
+            background="#D3D3D3", 
+            borderwidth=1,  
+            relief="groove",  
         )
+
         header_label.grid(column=0, row=0, padx=10, pady=10, sticky="w")
 
         # Frame for available trips
@@ -360,3 +365,6 @@ class HomePage:
 
         self.login_page = LoginPage(self.root)
         self.login_page.login_frame.pack(fill="both", expand=True)
+    
+    def get_user_name(self,user_id):
+       return self.controller.get_user_name(user_id)

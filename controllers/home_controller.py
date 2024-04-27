@@ -242,6 +242,13 @@ class HomeController:
             print("No values found for the selected row.")
             return False
 
+    def get_user_name(self,user_id):
+        select = "SELECT dbo.returnUserName(?)"
+        args = (user_id)
+
+        self.cursor.execute(select, args)
+        name = self.cursor.fetchone()[0]
+        return name
     # # To get the selected internal value (station ID) when needed
     # def get_internal_value(combo, named_values):
     #     selected_named_value = combo.get()
