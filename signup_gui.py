@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from controllers.signup_controller import SignupController
 
 
@@ -59,6 +60,13 @@ class SignupPage:
         )
         submit_button.grid(row=5, column=1, padx=10, pady=10)
 
+        return_button = ttk.Button(
+            signUp_frame,
+            text="Return to Login",
+            command=self.show_login_page,
+        )
+        return_button.grid(row=6, column=1, padx=10, pady=10)
+
         return signUp_frame
 
     def submitLogic(
@@ -69,6 +77,11 @@ class SignupPage:
         )
 
         if success:
+            messagebox.showinfo(
+                "Success",
+                "User added successfully. your ID is: "
+                + str(SignupController.new_user_id),
+            )
             self.show_login_page()
 
     def show_login_page(self):

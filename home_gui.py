@@ -108,11 +108,11 @@ class HomePage:
                 print("No item selected")
                 return None
 
-        
+
 
         available_trips_table.bind("<<TreeviewSelect>>", handle_row_selection)
 
-        
+
 
         book_button = ttk.Button(
             available_trips_frame,
@@ -268,9 +268,9 @@ class HomePage:
                 print("No item selected")
                 return None
 
-        
+
         current_trips_table.bind("<<TreeviewSelect>>", handle_row_selectionC)
-        
+
 
 
 
@@ -279,8 +279,15 @@ class HomePage:
         )
 
         cancel_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")
-        
-        
+
+        logout_button = ttk.Button(
+            self.root,
+            text="Logout",
+            command=self.logout,
+        )
+        logout_button.grid(column=0, row=3, padx=10, pady=10, sticky="w")
+
+
 
 
 
@@ -342,3 +349,14 @@ class HomePage:
 
     def cancel_trip(self,selected_itemsC, stations,user_id):
         self.controller.cancelTicket(selected_itemsC, stations,user_id)
+
+    def logout(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        from login_gui import LoginPage
+
+        LoginController.loginID = None
+
+        self.login_page = LoginPage(self.root)
+        self.login_page.login_frame.pack(fill="both", expand=True)
