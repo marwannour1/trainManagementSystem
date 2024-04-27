@@ -9,7 +9,8 @@ class HomePage:
     def __init__(self, root, controller):
         self.root = root
         self.controller = controller
-        self.selected_items = []
+        self.selected_itemsA = []
+        self.selected_itemsC = []
         self.create_main_page()
 
     def create_main_page(self):
@@ -47,7 +48,7 @@ class HomePage:
 
         available_trips_table = ttk.Treeview(
             available_trips_frame,
-            columns=("Start", "Destination", "Arrival Time", "Departure Time"),
+            columns=("Start", "Destination", "Departure Time", "Arrival Time"),
             show="headings",
         )
         available_trips_table.column("Start", width=100)
@@ -98,7 +99,7 @@ class HomePage:
             if selected_item:
 
                 print("Selected item:", selected_item)
-                self.selected_items = available_trips_table.item(
+                self.selected_itemsA = available_trips_table.item(
                     selected_item, "values"
                 )
                 # selected_values(item_values)
@@ -107,38 +108,11 @@ class HomePage:
                 print("No item selected")
                 return None
 
-        # # def selected_values(item):
-        # #         selected_item= item
-        # #         return selected_item
+        
 
         available_trips_table.bind("<<TreeviewSelect>>", handle_row_selection)
 
-        # def routeID():
-        #     global selected_item  # Access the selected item from the global variable
-        #     if selected_item:
-        #         route_id = selected_item  # Assuming the route ID is stored in the first column
-        #         return route_id
-        #     else:
-        #         print("No item selected")
-        #         return None
-
-        # item=routeID()
-
-        # selected_item=selected_values
-        # if selected_item:
-        #         start = selected_item[0]  # Assuming start is the first column
-        #         destination = selected_item[1]  # Assuming destination is the second column
-        #         arrival_time = selected_item[2]  # Assuming arrival time is the third column
-        #         departure_time = selected_item[3]
-        #         print(start, destination, arrival_time, departure_time)
-        # else:
-        #         # Handle case when no item is selected
-        #         print("No item selected")
-
-        # def on_row_select(self, event):
-        #     selected_item = self.available_trips_table.focus()
-        #     item_details = self.available_trips_table.item(selected_item)
-        #     self.selected_items = item_details['values']
+        
 
         book_button = ttk.Button(
             available_trips_frame,
@@ -279,10 +253,36 @@ class HomePage:
             ),
         )
         refresh_buttonC.grid(column=2, row=2, padx=10, pady=5, sticky="w")
+
+        def handle_row_selectionC(event):
+            selected_item = current_trips_table.selection()
+            if selected_item:
+
+                print("Selected item:", selected_item)
+                self.selected_itemsC = current_trips_table.item(
+                    selected_item, "values"
+                )
+                # selected_values(item_values)
+                return selected_item
+            else:
+                print("No item selected")
+                return None
+
+        
+        current_trips_table.bind("<<TreeviewSelect>>", handle_row_selectionC)
+        
+
+
+
         cancel_button = ttk.Button(
-            current_trips_frame, text="Cancel", command=cancel_trip
+            current_trips_frame, text="Cancel", command=self.cancel_trip(self.selected_itemsC, stations,LoginController.loginID)
         )
+
         cancel_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")
+        
+        
+
+
 
     def refresh_Pbutton(
         self, previous_trips_table, stations, start_varP, destination_varP, date_varP
@@ -339,3 +339,6 @@ class HomePage:
 
             self.booking_page = BookingPage(self.root)
             self.booking_page.booking_page.pack(fill="both", expand=True)
+
+    def cancel_trip(self,selected_itemsC, stations,user_id):
+        self.controller.cancelTicket(selected_itemsC, stations,user_id)

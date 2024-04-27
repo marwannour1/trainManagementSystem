@@ -205,6 +205,48 @@ class HomeController:
         else:
             print("No values found for the selected row.")
             return False
+    
+
+    def cancelTicket(self, selected_item, stations,user_id):
+
+        # Retrieve values from the selected row
+        # values = available_trips_table.item(selected_item)['values']
+        if selected_item:
+            try:
+
+                start_station = selected_item[0]
+                destination_station = selected_item[1]
+
+                start_id = stations.get(start_station, 0)
+                destination_id = stations.get(destination_station, 0)
+                
+                date = selected_item[2]
+
+                select = "SELECT dbo.cancelTicket(?, ?)"
+                args = (start_id, destination_id,date,user_id)
+
+                self.cursor.execute(select, args)
+                route_id = self.cursor.fetchone()[0]
+                print("route", route_id)
+
+                # Do something with the values (e.g., display them or use them for further processing)
+                print("Selected Trip:")
+                print("ids", start_id, destination_id)
+                print("Start Station:", start_station)
+                HomeController.station_from=start_station
+                print("Destination Station:", destination_station)
+                HomeController.station_to=destination_station
+                print("date:", date)
+                HomeController.route_id = route_id
+                return True
+            except Exception as e:
+                print(f"Error fetching data: {e}")
+                return False
+
+        else:
+            print("No values found for the selected row.")
+            return False
+
 
     # # To get the selected internal value (station ID) when needed
     # def get_internal_value(combo, named_values):
