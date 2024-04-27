@@ -222,26 +222,20 @@ class HomeController:
 
                 date = selected_item[2]
 
-                select =  "{call cancelTicket (?, ?, ?, ?)}"
+                select =  "{CALL dbo.cancelTicket (?, ?, ?, ?)}"
                 args = (start_id, destination_id,date,user_id)
 
                 self.cursor.execute(select, args)
-                success = args[-1]
-                
+                conn.commit()
                 print("Selected Trip:")
                 print("ids", start_id, destination_id)
                 print("Start Station:", start_station)
                 print("Destination Station:", destination_station)
                 print("date:", date)
                 print(type(date) )
+                print(user_id)
 
-                # Check the success flag
-                if success:
-                    print("Ticket cancellation successful.")
-                    return True
-                else:
-                    print("Ticket cancellation failed.")
-                    return False
+               
 
                 
             except Exception as e:
