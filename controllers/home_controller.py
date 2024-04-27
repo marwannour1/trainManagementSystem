@@ -11,6 +11,8 @@ from controllers.login_controller import LoginController
 class HomeController:
 
     route_id = None
+    station_from=None
+    station_to=None
 
     def __init__(self):
         self.cursor = conn.cursor()
@@ -189,7 +191,9 @@ class HomeController:
                 print("Selected Trip:")
                 print("ids", start_id, destination_id)
                 print("Start Station:", start_station)
+                HomeController.station_from=start_station
                 print("Destination Station:", destination_station)
+                HomeController.station_to=destination_station
                 print("Arrival Time:", arrival_time)
                 print("Departure Time:", departure_time)
                 HomeController.route_id = route_id
