@@ -11,8 +11,8 @@ from controllers.login_controller import LoginController
 class HomeController:
 
     route_id = None
-    station_from=None
-    station_to=None
+    station_from = None
+    station_to = None
 
     def __init__(self):
         self.cursor = conn.cursor()
@@ -191,9 +191,9 @@ class HomeController:
                 print("Selected Trip:")
                 print("ids", start_id, destination_id)
                 print("Start Station:", start_station)
-                HomeController.station_from=start_station
+                HomeController.station_from = start_station
                 print("Destination Station:", destination_station)
-                HomeController.station_to=destination_station
+                HomeController.station_to = destination_station
                 print("Arrival Time:", arrival_time)
                 print("Departure Time:", departure_time)
                 HomeController.route_id = route_id
@@ -205,9 +205,8 @@ class HomeController:
         else:
             print("No values found for the selected row.")
             return False
-    
 
-    def cancelTicket(self, selected_item, stations,user_id):
+    def cancelTicket(self, selected_item, stations, user_id):
 
         # Retrieve values from the selected row
         # values = available_trips_table.item(selected_item)['values']
@@ -222,8 +221,8 @@ class HomeController:
 
                 date = selected_item[2]
 
-                select =  "{CALL dbo.cancelTicket (?, ?, ?, ?)}"
-                args = (start_id, destination_id,date,user_id)
+                select = "{CALL dbo.cancelTicket (?, ?, ?, ?)}"
+                args = (start_id, destination_id, date, user_id)
 
                 self.cursor.execute(select, args)
                 conn.commit()
@@ -232,12 +231,9 @@ class HomeController:
                 print("Start Station:", start_station)
                 print("Destination Station:", destination_station)
                 print("date:", date)
-                print(type(date) )
+                print(type(date))
                 print(user_id)
 
-               
-
-                
             except Exception as e:
                 print(f"Error fetching data: {e}")
                 return False
@@ -245,7 +241,6 @@ class HomeController:
         else:
             print("No values found for the selected row.")
             return False
-
 
     # # To get the selected internal value (station ID) when needed
     # def get_internal_value(combo, named_values):
