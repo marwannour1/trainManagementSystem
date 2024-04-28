@@ -34,10 +34,11 @@ class BookingController:
             if selected_date and ticket_count <= available_seats:
                 print(selected_date, ticket_count)
                 cursor = conn.cursor()
-                select = "{CALL InsertTicket (?, ?, ?)}"
-                args = (selected_date_str, LoginController.loginID, HomeController.route_id)
-                cursor.execute(select, args)
-                conn.commit()
+                for i in range(ticket_count):
+                    select = "{CALL InsertTicket (?, ?, ?)}"
+                    args = (selected_date_str, LoginController.loginID, HomeController.route_id)
+                    cursor.execute(select, args)
+                    conn.commit()
             
             else:
                 messagebox.showerror(
