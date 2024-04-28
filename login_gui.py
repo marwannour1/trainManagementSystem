@@ -53,6 +53,8 @@ class LoginPage:
 
         if success:
             self.show_home_page()
+        else:
+            tk.messagebox.showerror("Error", "Invalid ID or Password")
 
     def show_signup_page(self):
         from signup_gui import SignupPage

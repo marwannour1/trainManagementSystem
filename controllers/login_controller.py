@@ -10,7 +10,7 @@ class LoginController:
     def login(email_tf, pwd_tf):
         user_id = email_tf.get()
         password = pwd_tf.get()
-
+       
         select = f"SELECT * FROM GetCustomerByIDAndPassword(? , ?)"
         args = (user_id, password)
 
@@ -25,5 +25,5 @@ class LoginController:
             return True
             # Add code to navigate to the next page
         else:
-            print("Login failed")
+            #print("Login failed")
             return False
