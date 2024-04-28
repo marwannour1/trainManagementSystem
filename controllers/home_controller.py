@@ -1,4 +1,5 @@
 import sys
+import tkinter
 
 
 import pyodbc as py
@@ -237,9 +238,9 @@ class HomeController:
             except Exception as e:
                 print(f"Error fetching data: {e}")
                 return False
-
+           
         else:
-            print("No values found for the selected row.")
+            tkinter.messagebox.showerror("Error", "Please select a ticket to cancel.")
             return False
 
     def get_user_name(self,user_id):

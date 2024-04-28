@@ -351,6 +351,10 @@ class HomePage:
 
             self.booking_page = BookingPage(self.root)
             self.booking_page.booking_page.pack(fill="both", expand=True)
+        else:
+            tk.messagebox.showerror(
+                "Error", "Please select a trip to book", parent=self.root
+            )
 
     def cancel_trip(self,selected_itemsC, stations,user_id):
         self.controller.cancelTicket(selected_itemsC, stations,user_id)
