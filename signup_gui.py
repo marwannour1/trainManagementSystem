@@ -83,6 +83,8 @@ class SignupPage:
                 + str(SignupController.new_user_id),
             )
             self.show_login_page()
+        else:
+            messagebox.showerror("Error", "Failed to add user. Please enter valid data.")
 
     def show_login_page(self):
         from login_gui import LoginPage
