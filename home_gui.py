@@ -290,7 +290,7 @@ class HomePage:
             text="Logout",
             command=self.logout,
         )
-        logout_button.grid(column=0, row=3, padx=10, pady=10, sticky="w")
+        logout_button.grid(column=0, row=2, padx=10, pady=10, sticky="w")
 
 
 

@@ -7,7 +7,7 @@ import pyodbc as py
 
 conn = py.connect(
     "Driver={SQL Server};"
-    "Server=NEBULA;"
+    "Server=DESKTOP-23V77CE;"
     "Database=TrainManagementSys;"
     "Trusted_Connection=yes;"
 )
