@@ -11,7 +11,7 @@ class SignupController:
             print("Password must be greater than or equal 8 characters.")
             return False
 
-        if len(phone_no) != 11:
+        if len(phone_no) != 11 or  not (phone_no.startswith("01")):
             print("Phone number must be 11 characters.")
             return False
         try:
